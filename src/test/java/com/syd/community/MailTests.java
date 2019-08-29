@@ -39,8 +39,6 @@ public class MailTests {
         System.out.printf(content);
 
         mailClient.sendMail("1091245120@qq.com", "HTMl", content);
-
-
     }
 
 }
