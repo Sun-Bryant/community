@@ -1,6 +1,7 @@
 package com.syd.community;
 
 
+import com.syd.community.util.CommunityUtil;
 import com.syd.community.util.MailClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +40,10 @@ public class MailTests {
         System.out.printf(content);
 
         mailClient.sendMail("1091245120@qq.com", "HTMl", content);
+    }
+    @Test
+    public void testCommunityUtil() {
+        System.out.println(CommunityUtil.getJSONString(1, "邮箱不正确"));
     }
 
 }

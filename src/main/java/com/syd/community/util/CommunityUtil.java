@@ -1,5 +1,6 @@
 package com.syd.community.util;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +11,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
+import javax.jws.Oneway;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class CommunityUtil {
@@ -33,4 +37,19 @@ public class CommunityUtil {
         return DigestUtils.md5DigestAsHex(key.getBytes());
     }
 
+    public static String getJSONString(int code, String msg) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", code);
+        map.put("msg", msg);
+        String json=JSON.toJSONString(map);
+//        System.out.println(json);
+        return json;
+    }
+    public static String getJSONString(int code) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", code);
+        String json=JSON.toJSONString(map);
+//        System.out.println(json);
+        return json;
+    }
 }
