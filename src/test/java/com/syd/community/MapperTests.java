@@ -44,11 +44,11 @@ public class MapperTests {
 
     @Test
     public void testSelectLoginTicket() {
-        LoginTicket loginTicket = loginTicketMapper.selectLoginTicket("abc");
+        LoginTicket loginTicket = loginTicketMapper.selectByTicket("abc");
         System.out.println(loginTicket);
 
         loginTicketMapper.updateStatus("abc", 1);
-        loginTicket = loginTicketMapper.selectLoginTicket("abc");
+        loginTicket = loginTicketMapper.selectByTicket("abc");
         System.out.println(loginTicket);
 
     }
