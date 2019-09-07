@@ -102,7 +102,7 @@ public class MapperTests {
             System.out.println(post);
         }
 
-        int rows = discussPostMapper.selectDisscussPostRows(149);
+        int rows = discussPostMapper.selectDiscussPostRows(149);
         System.out.println(rows);
     }
 }

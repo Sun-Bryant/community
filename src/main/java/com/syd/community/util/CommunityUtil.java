@@ -1,6 +1,7 @@
 package com.syd.community.util;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,19 +38,39 @@ public class CommunityUtil {
         return DigestUtils.md5DigestAsHex(key.getBytes());
     }
 
-    public static String getJSONString(int code, String msg) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("code", code);
-        map.put("msg", msg);
-        String json=JSON.toJSONString(map);
-//        System.out.println(json);
-        return json;
+    public static String getJSONString(int code, String msg, Map<String, Object> map) {
+        JSONObject json = new JSONObject();
+        json.put("code", code);
+        json.put("msg", msg);
+        if (map != null) {
+            for (String key : map.keySet()) {
+                json.put(key, map.get(key));
+            }
+        }
+        return json.toJSONString();
     }
+
+    public static String getJSONString(int code, String msg) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("code", code);
+//        map.put("msg", msg);
+//        String json=JSON.toJSONString(map);
+//        return json;
+        return getJSONString(code, msg, null);
+    }
+
     public static String getJSONString(int code) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("code", code);
+//        String json=JSON.toJSONString(map);
+//        return json;
+        return getJSONString(code, null, null);
+    }
+
+    public static void main(String[] args) {
         Map<String, Object> map = new HashMap<>();
-        map.put("code", code);
-        String json=JSON.toJSONString(map);
-//        System.out.println(json);
-        return json;
+        map.put("name", "zhangsan");
+        map.put("age", 22);
+        System.out.println(getJSONString(0, "ok", map));
     }
 }
