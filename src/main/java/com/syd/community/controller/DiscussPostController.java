@@ -88,7 +88,6 @@ public class DiscussPostController implements CommunityConstant {
                 //回复列表
                 List<Comment> replyList = commentService.findCommentsByEntity(
                         ENTITY_TYPE_COMMENT, comment.getId(), 0, Integer.MAX_VALUE);
-                System.out.println(replyList.size());
                 //回复VO列表
                 List<Map<String, Object>> replyVoList = new ArrayList<>();
                 if (replyList != null) {
@@ -98,8 +97,7 @@ public class DiscussPostController implements CommunityConstant {
                         //加回复
                         replyVo.put("reply", reply);
                         //加作者
-                        replyVo.put("user", userService.findUserById(comment.getUserId()));
-                        System.out.println(userService.findUserById(comment.getUserId()).getUsername());
+                        replyVo.put("user", userService.findUserById(reply.getUserId()));
                         //加回复目标（这点与评论不同，有可能有具体回复的人）
                         User target = reply.getTargetId() == 0 ? null : userService.findUserById(reply.getTargetId());
                         replyVo.put("target", target);
@@ -120,5 +118,6 @@ public class DiscussPostController implements CommunityConstant {
         model.addAttribute("comments", commentVoList);
         return "/site/discuss-detail";
     }
+
 
 }
