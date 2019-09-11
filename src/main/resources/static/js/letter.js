@@ -1,7 +1,31 @@
 $(function(){
 	$("#sendBtn").click(send_letter);
+	$("#deleteBtn").click(delete_letter);
 	$(".close").click(delete_msg);
 });
+
+function delete_letter() {
+    // $("#sendModal").modal("hide");
+    var deleteId = $("#delete-id").val();
+    var content = $("#message-text").val();
+    $.post(
+        CONTEXT_PATH + "/letter/delete",
+        {"deleteId": deleteId},
+        function (data) {
+            data = $.parseJSON(data);
+            if (data.code == 0) {
+                $("#hintBody").text("删除成功");
+            } else {
+                $("#hintBody").text(data.msg);
+            }
+            $("#hintModal").modal("show");
+            setTimeout(function(){
+                $("#hintModal").modal("hide");
+                location.reload();
+            }, 2000);
+        }
+    )
+}
 
 function send_letter() {
 	$("#sendModal").modal("hide");

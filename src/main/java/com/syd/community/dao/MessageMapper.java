@@ -29,5 +29,9 @@ public interface MessageMapper {
     //修改消息的状态
     int updateStatus(List<Integer> ids, int status);
 
+    //删除消息
+    int deleteMessage(int id);
+
+
 
 }

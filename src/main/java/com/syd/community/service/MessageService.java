@@ -48,4 +48,8 @@ public class MessageService {
         return messageMapper.updateStatus(ids, 1);
     }
 
+    public int deleteMessate(int id) {
+        return messageMapper.deleteMessage(id);
+    }
+
 }

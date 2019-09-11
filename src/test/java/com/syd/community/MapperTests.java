@@ -113,23 +113,25 @@ public class MapperTests {
 
     @Test
     public void testSelectLetters() {
-        List<Message> list = messageMapper.selectConversations(111, 0, 20);
-        for (Message message : list) {
-            System.out.println(message);
-        }
+//        List<Message> list = messageMapper.selectConversations(111, 0, 20);
+//        for (Message message : list) {
+//            System.out.println(message);
+//        }
+//
+//        int count = messageMapper.selectConversationCount(111);
+//        System.out.println(count);
+//
+//        list = messageMapper.selectLetters("111_112", 0, 10);
+//        for (Message message : list) {
+//            System.out.println(message);
+//        }
+//
+//        count = messageMapper.selectLetterCount("111_112");
+//        System.out.println(count);
+//
+//        count = messageMapper.selectLetterUnreadCount(131, "111_131");
+//        System.out.println(count);
 
-        int count = messageMapper.selectConversationCount(111);
-        System.out.println(count);
-
-        list = messageMapper.selectLetters("111_112", 0, 10);
-        for (Message message : list) {
-            System.out.println(message);
-        }
-
-        count = messageMapper.selectLetterCount("111_112");
-        System.out.println(count);
-
-        count = messageMapper.selectLetterUnreadCount(131, "111_131");
-        System.out.println(count);
+        System.out.println(messageMapper.deleteMessage(1));
     }
 }
