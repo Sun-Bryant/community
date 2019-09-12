@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,14 +50,14 @@ public class UserController {
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
     public String uploadHead(MultipartFile headerImage, Model model) {
         if (headerImage == null) {
-            model.addAttribute("error", "您还没有选择图片！");
+            model.addAttribute("templates/error", "您还没有选择图片！");
             return "/site/setting";
         }
         //得到用户上传图片的后缀
         String fileName = headerImage.getOriginalFilename();
         String suffix = fileName.substring(fileName.lastIndexOf("."));
         if (StringUtils.isBlank(suffix)) {
-            model.addAttribute("error", "文件的格式不正确！");
+            model.addAttribute("templates/error", "文件的格式不正确！");
             return "/site/setting";
         }
 
