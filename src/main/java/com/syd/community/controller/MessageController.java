@@ -148,8 +148,7 @@ public class MessageController {
     @RequestMapping(path = "/letter/delete", method = RequestMethod.POST)
     @ResponseBody
     public String deleteLetter(int deleteId) {
-//        System.out.println(deleteId);
-        if (messageService.deleteMessate(deleteId) > 0) {
+        if (messageService.deleteMessage(deleteId) > 0) {
             return CommunityUtil.getJSONString(0);
         } else {
             return CommunityUtil.getJSONString(1, "删除失败！");
