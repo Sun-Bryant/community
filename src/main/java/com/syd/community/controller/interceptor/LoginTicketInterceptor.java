@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
@@ -37,7 +36,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
         if (ticket != null) {
             //查询凭证
             LoginTicket loginTicket = userService.findLoginTicket(ticket);
-            //检查凭证是否有效
+//            检查凭证是否有效
             if (ticket != null && loginTicket.getStatus() == 0 && loginTicket.getExpired().after(new Date())) {
                 //根据凭证查询用户
                 User user = userService.findUserById(loginTicket.getUserId());

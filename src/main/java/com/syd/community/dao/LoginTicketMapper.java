@@ -5,6 +5,7 @@ import com.syd.community.entity.User;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
+@Deprecated
 public interface LoginTicketMapper {
 
     @Insert({
