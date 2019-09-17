@@ -1,7 +1,9 @@
 package com.syd.community.controller;
 
+import com.syd.community.entity.Event;
 import com.syd.community.entity.Page;
 import com.syd.community.entity.User;
+import com.syd.community.event.EventProducer;
 import com.syd.community.service.FollowService;
 import com.syd.community.service.UserService;
 import com.syd.community.util.CommunityConstant;
@@ -30,6 +32,9 @@ public class FollowController implements CommunityConstant {
     @Autowired
     private HostHolder hostHolder;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
@@ -37,6 +42,16 @@ public class FollowController implements CommunityConstant {
         User user = hostHolder.getUser();
 
         followService.follow(user.getId(), entityType, entityId);
+
+        // 触发关注事件（目前只能关注人）
+        Event event = new Event()
+                .setTopic(TOPIC_FOLLOW)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setEntityUserId(entityId);
+        //发送消息
+        eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0, "已关注!");
     }
@@ -73,6 +88,8 @@ public class FollowController implements CommunityConstant {
             }
         }
         model.addAttribute("users", userList);
+
+
 
         return "/site/followee";
     }
