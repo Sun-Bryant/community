@@ -1,10 +1,8 @@
 package com.syd.community.controller;
 
 import com.sun.org.apache.xpath.internal.operations.Mod;
-import com.syd.community.entity.Comment;
-import com.syd.community.entity.DiscussPost;
-import com.syd.community.entity.Page;
-import com.syd.community.entity.User;
+import com.syd.community.entity.*;
+import com.syd.community.event.EventProducer;
 import com.syd.community.service.CommentService;
 import com.syd.community.service.DiscussPostService;
 import com.syd.community.service.LikeService;
@@ -41,6 +39,10 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private HostHolder hostHolder;
 
+    @Autowired
+    private EventProducer eventProducer;
+
+
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussPost(String title, String content) {
@@ -54,6 +56,14 @@ public class DiscussPostController implements CommunityConstant {
         post.setContent(content);
         post.setCreateTime(new Date());
         discussPostService.addDiscussPost(post);
+
+        // 触发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(user.getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(post.getId());
+        eventProducer.fireEvent(event);
 
         //报错的情况，将来统一处理。
         return CommunityUtil.getJSONString(0, "发布成功");
