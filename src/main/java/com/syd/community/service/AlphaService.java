@@ -6,8 +6,12 @@ import com.syd.community.dao.UserMapper;
 import com.syd.community.entity.DiscussPost;
 import com.syd.community.entity.User;
 import com.syd.community.util.CommunityUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
@@ -24,6 +28,8 @@ import java.util.Date;
 @Service
 //@Scope("prototype") //这是正常的原型模式   默认是singleton单例模式
  public class AlphaService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AlphaService.class);
 
     @Autowired
     private AlphaDao alphaDao;
@@ -116,5 +122,17 @@ import java.util.Date;
             }
         });
     }
+
+    // 让该方法在多线程环境下,被异步的调用.（启动一个线程来调用这个方法，这个方法和主线程是并发执行的）
+    @Async
+    public void execute1() {
+        logger.debug("execute1");
+    }
+
+   /* @Scheduled(initialDelay = 10000, fixedRate = 1000)*/
+    public void execute2() {
+        logger.debug("execute2");
+    }
+
 
 }
