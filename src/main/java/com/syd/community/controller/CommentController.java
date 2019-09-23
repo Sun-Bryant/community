@@ -7,7 +7,9 @@ import com.syd.community.service.DiscussPostService;
 import com.syd.community.service.UserService;
 import com.syd.community.util.CommunityConstant;
 import com.syd.community.util.HostHolder;
+import com.syd.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +33,9 @@ public class CommentController implements CommunityConstant {
 
     @Autowired
     private EventProducer eventProducer;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @RequestMapping(path = "/add/{discussPostId}", method = RequestMethod.POST)
     public String addComment(@PathVariable("discussPostId") int discussPostId, Comment comment) {
@@ -65,6 +70,10 @@ public class CommentController implements CommunityConstant {
                     .setEntityId(discussPostId);
             eventProducer.fireEvent(event);
         }
+
+        // 计算帖子分数
+        String redisKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(redisKey, discussPostId);
 
         return "redirect:/discuss/detail/" + discussPostId;
     }
