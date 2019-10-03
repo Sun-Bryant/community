@@ -1,6 +1,5 @@
 package com.syd.community.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.syd.community.entity.*;
 import com.syd.community.event.EventProducer;
 import com.syd.community.service.CommentService;

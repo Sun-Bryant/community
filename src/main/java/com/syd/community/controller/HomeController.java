@@ -3,7 +3,6 @@ package com.syd.community.controller;
 import com.syd.community.entity.DiscussPost;
 import com.syd.community.entity.Page;
 import com.syd.community.entity.User;
-import com.syd.community.service.AlphaService;
 import com.syd.community.service.DiscussPostService;
 import com.syd.community.service.LikeService;
 import com.syd.community.service.UserService;
@@ -12,12 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
 
 @Controller
@@ -31,6 +25,11 @@ public class HomeController implements CommunityConstant {
 
     @Autowired
     private LikeService likeService;
+
+    @RequestMapping(path = "/", method = RequestMethod.GET)
+    public String root() {
+        return "forward:/index";
+    }
 
     @RequestMapping(path = "/index", method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page,

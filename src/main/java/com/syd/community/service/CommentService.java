@@ -1,9 +1,7 @@
 package com.syd.community.service;
 
 import com.syd.community.dao.CommentMapper;
-import com.syd.community.dao.DiscussPostMapper;
 import com.syd.community.entity.Comment;
-import com.syd.community.entity.DiscussPost;
 import com.syd.community.util.CommunityConstant;
 import com.syd.community.util.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;

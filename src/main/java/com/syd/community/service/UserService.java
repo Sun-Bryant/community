@@ -1,9 +1,6 @@
 package com.syd.community.service;
 
-import com.syd.community.dao.DiscussPostMapper;
-import com.syd.community.dao.LoginTicketMapper;
 import com.syd.community.dao.UserMapper;
-import com.syd.community.entity.DiscussPost;
 import com.syd.community.entity.LoginTicket;
 import com.syd.community.entity.User;
 import com.syd.community.util.CommunityConstant;
@@ -146,7 +143,7 @@ public class UserService implements CommunityConstant {
         Context context = new Context();
         context.setVariable("email", user.getEmail());
         // eg:  http://localhost:8080/community/activation/101/code
-        String url = domain + contextPath + "//activation/" + user.getId() + "/" + user.getActivationCode();
+        String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
         String content = templateEngine.process("/mail/activation", context);
         mailClient.sendMail(user.getEmail(), "激活账号", content);

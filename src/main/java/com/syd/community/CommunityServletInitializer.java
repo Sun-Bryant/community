@@ -1,4 +1,4 @@
-package com.nowcoder.community;
+package com.syd.community;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

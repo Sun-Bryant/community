@@ -1,7 +1,6 @@
 package com.syd.community.dao;
 
 import com.syd.community.entity.LoginTicket;
-import com.syd.community.entity.User;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
