@@ -49,15 +49,18 @@ public class DiscussPostController implements CommunityConstant {
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussPost(String title, String content) {
+        // 获取当前用户并判空
         User user = hostHolder.getUser();
-        if (user == null) {
+        if (user == null) {   // 403代表没有权限的意思。
             return CommunityUtil.getJSONString(403, "您还没有登录哦！");
         }
+        // 生成帖子
         DiscussPost post = new DiscussPost();
         post.setUserId(user.getId());
         post.setTitle(title);
         post.setContent(content);
         post.setCreateTime(new Date());
+        // 添加帖子
         discussPostService.addDiscussPost(post);
 
         // 触发发帖事件
@@ -68,7 +71,7 @@ public class DiscussPostController implements CommunityConstant {
                 .setEntityId(post.getId());
         eventProducer.fireEvent(event);
 
-        // 计算帖子分数
+        // 计算帖子分数 其实就是把有了点赞评论收藏等操作后，需要再次计算帖子分数的集合中。然后利用定时任务去计算帖子分数。
         String redisKey = RedisKeyUtil.getPostScoreKey();
         redisTemplate.opsForSet().add(redisKey, post.getId());
 
@@ -76,12 +79,13 @@ public class DiscussPostController implements CommunityConstant {
         return CommunityUtil.getJSONString(0, "发布成功");
     }
 
+    // 帖子详情
     @RequestMapping(path = "/detail/{discussPostId}", method = RequestMethod.GET)
     public String getDiscussPost(@PathVariable("discussPostId") int discussPostId, Model model, Page page) {
-        //帖子
+        //查询帖子
         DiscussPost post = discussPostService.findDiscussPostById(discussPostId);
         model.addAttribute("post", post);
-        //作者
+        //查询作者
         User user = userService.findUserById(post.getUserId());
         model.addAttribute("user", user);
         // 点赞数量
@@ -98,7 +102,7 @@ public class DiscussPostController implements CommunityConstant {
         page.setRows(post.getCommentCount());
 
         //评论：给帖子的评论。
-        //回复：给评论的评论
+        //回复：给评论的评论。
         //评论列表
         List<Comment> commentList = commentService.findCommentsByEntity(
                 ENTITY_TYPE_POST, post.getId(), page.getOffset(), page.getLimit());

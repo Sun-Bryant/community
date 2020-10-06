@@ -44,7 +44,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
             if (ticket != null && loginTicket.getStatus() == 0 && loginTicket.getExpired().after(new Date())) {
                 //根据凭证查询用户
                 User user = userService.findUserById(loginTicket.getUserId());
-                //在本次请求中持有用户（暂存用户）
+                //在本次请求中持有用户（暂存用户）  如果仅仅把用户存在容器中，在多线程并发情况下可能会产生冲突，所有我们需要使用hostHolder
                 hostHolder.setUser(user);
                 // 构建用户认证的结果（凭证）,并存入SecurityContext,以便于Security进行授权.
                 Authentication authentication = new UsernamePasswordAuthenticationToken(

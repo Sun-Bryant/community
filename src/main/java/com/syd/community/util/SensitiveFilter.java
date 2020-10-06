@@ -25,10 +25,14 @@ public class SensitiveFilter {
     // 根节点
     private TrieNode rootNode = new TrieNode();
 
+    // @PostConstruct注解说明这是一个初始化方法，当容器调用这个bean实例化之后，这个方法自动被调用。
+    // 这个方法会在构造器之后调用
     @PostConstruct
     public void init() {
         try (
+                // 字节流
                 InputStream is = this.getClass().getClassLoader().getResourceAsStream("sensitive-words.txt");
+                // 字符流
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         ) {
             String keyword;
@@ -84,6 +88,10 @@ public class SensitiveFilter {
         // 结果
         StringBuilder sb = new StringBuilder();
 
+        // 以指针2位条件比指针3更合适。以指针3作为循环条件，会遗漏结尾处的敏感词。
+        // eg:  敏感词有fabcd和abc。要核验的字符串的最后一段为 fabc。
+        // 此时指针二指f, 指针三指到c, 根据循环中的判断c的lastKeyword为false, position++, 此时跳出循环,
+        // 然后将fabc加到StringBuilder中, 但是abc这个敏感词没有被过滤掉.
         while (begin < text.length()) {
             char c = text.charAt(position);
 
@@ -93,6 +101,12 @@ public class SensitiveFilter {
                 if (tempNode == rootNode) {
                     sb.append(c);
                     begin++;
+                }
+                //如果最后一位仍然是符号，那就比较下一个，不能直接加，否则会越界
+                if(position==text.length()-1){
+                    begin++;
+                    position=begin;
+                    continue;
                 }
                 // 无论符号在开头或中间,指针3都向下走一步
                 position++;
@@ -116,7 +130,7 @@ public class SensitiveFilter {
                 // 重新指向根节点
                 tempNode = rootNode;
             } else {
-                // 检查下一个字符
+                // 检查下一个字符 先确保索引不越界
                 if (position < text.length() - 1) {
                     position++;
                 }

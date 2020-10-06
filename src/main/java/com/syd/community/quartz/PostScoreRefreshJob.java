@@ -65,7 +65,10 @@ public class PostScoreRefreshJob implements Job, CommunityConstant {
 
     private void refresh(int postId) {
         DiscussPost post = discussPostService.findDiscussPostById(postId);
-
+        if(post.getStatus() == 2){
+            logger.error("帖子已被删除");
+            return;
+        }
         if (post == null) {
             logger.error("该帖子不存在: id = " + postId);
             return;

@@ -35,12 +35,14 @@ public class FollowController implements CommunityConstant {
     @Autowired
     private EventProducer eventProducer;
 
+    // 关注某人
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
         //为了防止未登录   需要用拦截器对这个方法做一个检查
         User user = hostHolder.getUser();
 
+        // 关注
         followService.follow(user.getId(), entityType, entityId);
 
         // 触发关注事件（目前只能关注人）
@@ -56,6 +58,7 @@ public class FollowController implements CommunityConstant {
         return CommunityUtil.getJSONString(0, "已关注!");
     }
 
+    // 取消关注某人
     @RequestMapping(path = "/unfollow", method = RequestMethod.POST)
     @ResponseBody
     public String unfollow(int entityType, int entityId) {
@@ -70,18 +73,21 @@ public class FollowController implements CommunityConstant {
     //查询关注列表
     @RequestMapping(path = "/followees/{userId}", method = RequestMethod.GET)
     public String getFollowees(@PathVariable("userId") int userId, Page page, Model model) {
+        // 获得对应Id的用户（注意这里不能用hostHolder，因为可能是查看别人的关注列表，并不是当前用户的）
         User user = userService.findUserById(userId);
         if (user == null) {
             throw new RuntimeException("该用户不存在!");
         }
         model.addAttribute("user", user);
 
+        // 设置分页信息
         page.setLimit(5);
         page.setPath("/followees/" + userId);
         page.setRows((int) followService.findFolloweeCount(userId, ENTITY_TYPE_USER));
 
+        // 获取关注列表
         List<Map<String, Object>> userList = followService.findFollowees(userId, page.getOffset(), page.getLimit());
-        if (userList != null) {
+        if (userList != null) { //当前用户对该关注列表里的所有用户的关注状态
             for (Map<String, Object> map : userList) {
                 User u = (User) map.get("user");
                 map.put("hasFollowed", hasFollowed(u.getId()));
@@ -89,26 +95,27 @@ public class FollowController implements CommunityConstant {
         }
         model.addAttribute("users", userList);
 
-
-
         return "/site/followee";
     }
 
     //获取粉丝列表
     @RequestMapping(path = "/followers/{userId}", method = RequestMethod.GET)
     public String getFollowers(@PathVariable("userId") int userId, Page page, Model model) {
+        // 获得对应Id的用户（注意这里不能用hostHolder，因为可能是查看别人的粉丝列表，并不是当前用户的）
         User user = userService.findUserById(userId);
         if (user == null) {
             throw new RuntimeException("该用户不存在!");
         }
         model.addAttribute("user", user);
 
+        // 设置分页信息
         page.setLimit(5);
         page.setPath("/followers/" + userId);
         page.setRows((int) followService.findFollowerCount(ENTITY_TYPE_USER, userId));
 
+        // 获取粉丝列表
         List<Map<String, Object>> userList = followService.findFollowers(userId, page.getOffset(), page.getLimit());
-        if (userList != null) {
+        if (userList != null) { //当前用户对该粉丝列表的所有用户的关注状态
             for (Map<String, Object> map : userList) {
                 User u = (User) map.get("user");
                 map.put("hasFollowed", hasFollowed(u.getId()));

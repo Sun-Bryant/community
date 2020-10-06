@@ -42,9 +42,9 @@ public class LikeController implements CommunityConstant {
         // 点赞
         likeService.like(user.getId(), entityType, entityId, entityUserId);
 
-        // 数量
+        // 查询某实体的点赞数量
         long likeCount = likeService.findEntityLikeCount(entityType, entityId);
-        // 状态
+        // 查询当前用户对某实体的点赞状态
         int likeStatus = likeService.findEntityLikeStatus(user.getId(), entityType, entityId);
         // 返回的结果
         Map<String, Object> map = new HashMap<>();
@@ -64,7 +64,7 @@ public class LikeController implements CommunityConstant {
         }
 
         if(entityType == ENTITY_TYPE_POST) {
-            // 计算帖子分数
+            // 计算帖子分数 其实就是把有了点赞评论收藏等操作后，需要再次计算帖子分数的集合中。然后利用定时任务去计算帖子分数。
             String redisKey = RedisKeyUtil.getPostScoreKey();
             redisTemplate.opsForSet().add(redisKey, postId);
         }

@@ -37,6 +37,7 @@ public class CommentController implements CommunityConstant {
 
     @RequestMapping(path = "/add/{discussPostId}", method = RequestMethod.POST)
     public String addComment(@PathVariable("discussPostId") int discussPostId, Comment comment) {
+        // 获取用户
         comment.setUserId(hostHolder.getUser().getId());
         comment.setStatus(0);
         comment.setCreateTime(new Date());
@@ -60,7 +61,7 @@ public class CommentController implements CommunityConstant {
         eventProducer.fireEvent(event);
 
         if (comment.getEntityType() == ENTITY_TYPE_POST) {
-            // 触发事件
+            // 触发发帖事件
             event = new Event()
                     .setTopic(TOPIC_PUBLISH)
                     .setUserId(comment.getUserId())
@@ -69,7 +70,7 @@ public class CommentController implements CommunityConstant {
             eventProducer.fireEvent(event);
         }
 
-        // 计算帖子分数
+        // 计算帖子分数 其实就是把有了点赞评论收藏等操作后，需要再次计算帖子分数的集合中。然后利用定时任务去计算帖子分数。
         String redisKey = RedisKeyUtil.getPostScoreKey();
         redisTemplate.opsForSet().add(redisKey, discussPostId);
 

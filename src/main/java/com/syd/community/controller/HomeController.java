@@ -39,7 +39,9 @@ public class HomeController implements CommunityConstant {
         page.setRows(discussPostService.findDiscussPostRows(0));
         page.setPath("/index?orderMode=" + orderMode);
 
+        // userId = 0,查询所有用户的帖子数据
         List<DiscussPost> list = discussPostService.findDiscussPosts(0, page.getOffset(), page.getLimit(), orderMode);
+        // discussPosts整合 帖子post 和 user ，相当于vo。
         List<Map<String, Object>> discussPosts = new ArrayList<>();
         if (list != null) {
             for (DiscussPost post : list) {
@@ -57,6 +59,7 @@ public class HomeController implements CommunityConstant {
         return "index";
     }
 
+    // 获取错误页面
     @RequestMapping(path = "/error", method = RequestMethod.GET)
     public String getErrorPage() {
         return "/error/500";

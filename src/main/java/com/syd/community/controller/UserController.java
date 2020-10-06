@@ -101,6 +101,7 @@ public class UserController implements CommunityConstant {
 
         // 拼url
         String url = headerBucketUrl + "/" + fileName;
+        // 更新当前用户头像的路径
         userService.updateHeader(hostHolder.getUser().getId(), url);
 
         return CommunityUtil.getJSONString(0);
@@ -171,7 +172,9 @@ public class UserController implements CommunityConstant {
     // 修改密码
     @RequestMapping(path = "/updatePassword", method = RequestMethod.POST)
     public String updatePassword(String oldPassword, String newPassword, Model model) {
+        // 获取当前用户
         User user = hostHolder.getUser();
+        // 调用service修改密码
         Map<String, Object> map = userService.updatePassword(user.getId(), oldPassword, newPassword);
         if (map == null || map.isEmpty()) {//修改成功
             return "redirect:/logout";

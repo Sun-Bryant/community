@@ -30,7 +30,11 @@ public class FollowService implements CommunityConstant {
                 String followerKey = RedisKeyUtil.getFollowerKey(entityType, enetityId);
 
                 operations.multi();
+                // 某个用户关注的实体  followee:{userId}:{entityType} -> zset(entityId,now)
+                // 添加到当前用户的关注列表
                 operations.opsForZSet().add(followeeKey, enetityId, System.currentTimeMillis());
+                // 某个实体拥有的粉丝  follower:{entityType}:{entityId} -> zset(userId,now)
+                // 添加到对应实体(用户)的粉丝列表
                 operations.opsForZSet().add(followerKey, userId, System.currentTimeMillis());
 
                 return operations.exec();
@@ -47,7 +51,9 @@ public class FollowService implements CommunityConstant {
                 String followerKey = RedisKeyUtil.getFollowerKey(entityType, enetityId);
 
                 operations.multi();
+                // 从当前用户的关注列表中删除
                 operations.opsForZSet().remove(followeeKey, enetityId);
+                // 从对应用户的粉丝列表中删除
                 operations.opsForZSet().remove(followerKey, userId);
 
                 return operations.exec();
@@ -77,6 +83,7 @@ public class FollowService implements CommunityConstant {
     public List<Map<String, Object>> findFollowees(int userId, int offset, int limit) {
         String followeeKey = RedisKeyUtil.getFolloweeKey(userId, ENTITY_TYPE_USER);
         //此处的limit和MySQL中的不太一样，此处为截止的索引，所以为offset + limit - 1;
+        //redis的 reverseRange 和 range方法都是返回一个自己实现set接口的的有序集合。
         Set<Integer> targetIds = redisTemplate.opsForZSet().reverseRange(followeeKey, offset, offset + limit - 1);
 
         if (targetIds == null) {

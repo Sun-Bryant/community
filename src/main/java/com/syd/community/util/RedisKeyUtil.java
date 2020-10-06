@@ -20,7 +20,7 @@ public class RedisKeyUtil {
         return PREFIX_ENTITY_LIKE + SPLIT + entityType + SPLIT + entityId;
     }
 
-    // 某个用户的赞
+    // 某个用户的收到的总赞数
     // like:user:{userId} -> int
     public static String getUserLikeKey(int userId) {
         return PREFIX_USER_LIKE + SPLIT + userId;

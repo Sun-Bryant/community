@@ -5,17 +5,18 @@ import java.util.Map;
 
 public class Event {
 
-    private String topic;
-    private int userId;
-    private int entityType;
+    private String topic; // 事件主题
+    private int userId;  // 事件的触发者
+    private int entityType;  // 事件触发在哪个实体之上
     private int entityId;
-    private int entityUserId;
-    private Map<String, Object> data = new HashMap<>();
+    private int entityUserId;   // 实体的作者是谁
+    private Map<String, Object> data = new HashMap<>();  // 其他额外的数据
 
     public String getTopic() {
         return topic;
     }
 
+    // set方法的返回值是Event。这样的好处是我们set一个值后，返回当前对象，还可以接着set其他值。
     public Event setTopic(String topic) {
         this.topic = topic;
         return this;

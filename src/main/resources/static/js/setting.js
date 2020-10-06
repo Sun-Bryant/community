@@ -10,7 +10,7 @@ function upload() {
         contentType: false,// 不让jQuery设置上传的类型，因为我们是上传图片。
         data: new FormData($("#uploadForm")[0]),
         success: function(data) {
-            if(data && data.code == 0) {
+            if(data && data.code == 0) { // data存在，并且data等于0 说明成功了
                 // 更新头像访问路径
                 $.post(
                     CONTEXT_PATH + "/user/header/url",

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+// 统一处理异常的类
 @ControllerAdvice(annotations = Controller.class)
 public class ExceptionAdvice {
 
@@ -24,11 +25,11 @@ public class ExceptionAdvice {
             logger.error(element.toString());
         }
         String xRequestedWith = request.getHeader("x-requested-with");
-        if ("XMLHttpRequest".equals(xRequestedWith)) {
+        if ("XMLHttpRequest".equals(xRequestedWith)) {  // 说明这是一个html请求。
             response.setContentType("application/plain;charset=utf-8");
             PrintWriter writer = response.getWriter();
             writer.write(CommunityUtil.getJSONString(1, "服务器异常！"));
-        } else {
+        } else { // 普通请求  返回html页面
             response.sendRedirect(request.getContextPath() + "/error");
         }
     }

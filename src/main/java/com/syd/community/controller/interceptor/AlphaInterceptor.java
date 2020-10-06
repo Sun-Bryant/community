@@ -16,6 +16,7 @@ public class AlphaInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(AlphaInterceptor.class);
 
     //controller请求之前执行
+    //参数列表中handler为被拦截的方法。
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         logger.debug("preHandle" + handler.toString());

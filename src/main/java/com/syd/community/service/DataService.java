@@ -43,7 +43,7 @@ public class DataService {
         while (!calendar.getTime().after(end)) {
             String key = RedisKeyUtil.getUVKey(df.format(calendar.getTime()));
             keyList.add(key);
-            calendar.add(Calendar.DATE, 1);
+            calendar.add(Calendar.DATE, 1); // 处理完时间加一天。
         }
 
         // 合并这些数据

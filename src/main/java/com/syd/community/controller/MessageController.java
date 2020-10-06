@@ -59,6 +59,7 @@ public class MessageController implements CommunityConstant {
             }
         }
         model.addAttribute("conversations", conversations);
+        model.addAttribute("user", hostHolder.getUser());
 
         // 查询未读消息数量
         int letterUnreadCount = messageService.findLetterUnreadCount(user.getId(), null);

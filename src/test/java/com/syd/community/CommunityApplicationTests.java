@@ -43,6 +43,8 @@ public class CommunityApplicationTests implements ApplicationContextAware {
 
 	/**
 	 * 被Spring容器管理的Bean实例，默认是单例的。
+	 *
+	 * 测试Spring容器管理bean的初始化和销毁方法。
 	 */
 	@Test
 	public void testbeanManagement() {

@@ -50,7 +50,7 @@ public class AlphaController {
 
         //返回响应数据
         response.setContentType("text/html;charset=utf-8");
-        try (
+        try ( // java7新语法  在try后面加小括号，把流放在小括号里，编译的时候，会自动加finally来关闭流
                 PrintWriter writer = response.getWriter();
         ) {
             writer.write("<h1>牛客网</h1>");
@@ -106,7 +106,7 @@ public class AlphaController {
         return "/demo/view";
     }
 
-    //响应JSON数据（通常是在异步请求中 eg：注册时候，输入用户名，发现用户名被占用）
+    //响应JSON数据（通常是在异步请求中     eg：注册时候，输入用户名，发现用户名被占用）
     // Java对象-->JSON字符串-->JS对象
     //查询一个员工  employee
     @RequestMapping(path = "/emp", method = RequestMethod.GET)
@@ -120,6 +120,7 @@ public class AlphaController {
     }
 
     //查询所有员工
+    // @ResponseBody的作用其实是将java对象转为json格式的数据。
     @RequestMapping(path = "/emps", method = RequestMethod.GET)
     @ResponseBody
     public List<Map<String, Object>> getEmps() {

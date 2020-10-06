@@ -60,9 +60,13 @@ import java.util.Date;
         System.out.println("销毁AlphaService");
     }
 
-    // REQUIRED: 支持当前事务(外部事务),如果不存在则创建新事务.
-    // REQUIRES_NEW: 创建一个新事务,并且暂停当前事务(外部事务).
-    // NESTED: 如果当前存在事务(外部事务),则嵌套在该事务中执行(独立的提交和回滚),否则就会REQUIRED一样.
+    // 3种常见的传播机制。一共有七种。
+    // 1)REQUIRED: 支持当前事务/外部事务(A调B,对于B来说，A就是当前事务),如果当前事物不存在，则创建新事务.
+    //      A调B,如果A有事务，就按A的来，否则，就创建一个新事务，按自己的来。
+    // 2)REQUIRES_NEW: 无论如何都创建一个新事务,如果有当前事务，就暂停(挂起)当前事务.
+    //      A调B,B不管A的事务，有也给你暂停掉。我永远都创建一个新事务，按照自己的事务来执行。
+    // 3)NESTED: 嵌套事务，如果当前事务存在，那么嵌套在该事务中执行(独立的提交和回滚 相当于子事务)。如果当前事务不存在，则表现跟REQUIRED一样。
+    //      A调B，A有事务，那我就嵌套在A的事物里执行(B是有独立的提交和回滚)。
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
     public Object save1() {
         // 新增用户

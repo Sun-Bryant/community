@@ -94,7 +94,7 @@ public class ElasticsearchTests {
                 ).build();
 
         // elasticTemplate.queryForPage(searchQuery, class, SearchResultMapper)
-        // 底层获取得到了高亮显示的值, 但是没有返回.
+        // 底层获取得到了高亮显示的值, 但是没有返回（没有处理）.
         // 底层获取到了高亮显示的值，但是没有返回。（两份数据）
 
         Page<DiscussPost> page = discussRepository.search(searchQuery);

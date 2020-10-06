@@ -64,6 +64,7 @@ public class EventConsumer implements CommunityConstant {
     @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
 
+    // 系统通知功能 消费评论、点赞、关注三个主题。
     @KafkaListener(topics = {TOPIC_COMMENT, TOPIC_LIKE, TOPIC_FOLLOW})
     public void handleCommentMessage(ConsumerRecord record) {
         if (record == null || record.value() == null) {
@@ -88,7 +89,7 @@ public class EventConsumer implements CommunityConstant {
         content.put("userId", event.getUserId());
         content.put("entityType", event.getEntityType());
         content.put("entityId", event.getEntityId());
-
+        // 可能存在的额外的数据
         if (!event.getData().isEmpty()) {
             for (Map.Entry<String, Object> entry : event.getData().entrySet()) {
                 content.put(entry.getKey(), entry.getValue());
@@ -156,7 +157,7 @@ public class EventConsumer implements CommunityConstant {
         String cmd = wkImageCommand + " --quality 75 "
                 + htmlUrl + " " + wkImageStorage + "/" + fileName + suffix;
         try {
-            Runtime.getRuntime().exec(cmd).waitFor();//mac 需要这样写。
+            Runtime.getRuntime().exec(cmd).waitFor();//在执行这个方法把命令传给本地电脑的执行过程中（不一定执行完），就会执行下面一行的日志代码。所以需要定时器来监控此处是否正确返回。
             logger.info("生成长图成功: " + cmd);
         } catch (IOException | InterruptedException e) {
             logger.error("生成长图失败: " + e.getMessage());

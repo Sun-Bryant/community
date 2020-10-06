@@ -30,7 +30,9 @@ public class DataController {
         model.addAttribute("uvResult", uv);
         model.addAttribute("uvStartDate", start);
         model.addAttribute("uvEndDate", end);
-        // 转发
+//        return "/site/admin/data";
+        // 上面这种是返回一个模板，这个模板是返回给DispatchServlet，DispatchServlet得到这个模板就用模板去做后序的处理。
+        // 转发的话，就算比如我这个逻辑处理到一半，还没有完，还需要另外一个方法去处理，就可以接着转发，携带数据。是一个请求。重定向是两个请求。
         return "forward:/data";
     }
 

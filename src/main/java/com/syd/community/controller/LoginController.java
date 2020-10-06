@@ -1,6 +1,5 @@
 package com.syd.community.controller;
 
-
 import com.google.code.kaptcha.Producer;
 import com.syd.community.entity.User;
 import com.syd.community.service.UserService;
@@ -99,6 +98,7 @@ public class LoginController implements CommunityConstant {
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public String register(Model model, User user) {
+        // 注册
         Map<String, Object> map = userService.register(user);
         if (map == null || map.isEmpty()) {
             model.addAttribute("msg", "注册成功，我们已经向你的邮箱发送了一封激活邮件，请尽快激活");
@@ -163,7 +163,7 @@ public class LoginController implements CommunityConstant {
         }
     }
 
-
+    // 忘记密码
     @RequestMapping(path = "/forget/code", method = RequestMethod.GET)
     @ResponseBody
     public String getForgetCode(String email, HttpSession session) {
@@ -194,8 +194,9 @@ public class LoginController implements CommunityConstant {
 //        //将验证码存入session。
 //        session.setAttribute("kaptcha", text);
 
-        //验证码的归属：临时给客户端颁发一个凭证（随机字符串），来标识验证码的所属用户。
+        // 验证码的归属：临时给客户端颁发一个凭证（随机字符串），来标识验证码的所属用户。
         String kaptchaOwner = CommunityUtil.generateUUID();
+        // 将验证码的归属存入cookie
         Cookie cookie = new Cookie("kaptchaOwner", kaptchaOwner);
         cookie.setMaxAge(60);
         cookie.setPath(contextPath);
@@ -204,7 +205,6 @@ public class LoginController implements CommunityConstant {
         //将验证码存入redis
         String redisKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
         redisTemplate.opsForValue().set(redisKey, text, 60, TimeUnit.SECONDS);
-
 
         //将图片输出给浏览器
         response.setContentType("image/png");

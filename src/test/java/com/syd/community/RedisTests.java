@@ -83,7 +83,7 @@ public class RedisTests {
 
         System.out.println(redisTemplate.opsForZSet().zCard(redisKey));
         System.out.println(redisTemplate.opsForZSet().score(redisKey, "八戒"));
-        System.out.println(redisTemplate.opsForZSet().reverseRank(redisKey, "八戒"));
+        System.out.println(redisTemplate.opsForZSet().reverseRank(redisKey, "八戒"));// 默认从小到大，reverse可以从大到小。
         System.out.println(redisTemplate.opsForZSet().reverseRange(redisKey, 0, 2));
     }
 
@@ -97,6 +97,7 @@ public class RedisTests {
     }
 
     // 批量发送命令,节约网络开销.
+    // 多次访问同一个key
     @Test
     public void testBoundOperations() {
         String redisKey = "test:count";
@@ -132,7 +133,7 @@ public class RedisTests {
         System.out.println(result);
     }
 
-    // 统计20万个重复数据的独立总数.
+    // HyperLogLog实现统计20万个重复数据的独立总数.
     @Test
     public void testHyperLogLog() {
         String redisKey = "test:hll:01";
@@ -150,7 +151,7 @@ public class RedisTests {
         System.out.println(size);
     }
 
-    // 将3组数据合并, 再统计合并后的重复数据的独立总数.
+    // HyperLogLog实现 将3组数据合并, 再统计合并后的重复数据的独立总数.
     @Test
     public void testHyperLogLogUnion() {
         String redisKey2 = "test:hll:02";
@@ -175,12 +176,12 @@ public class RedisTests {
         System.out.println(size);
     }
 
-    // 统计一组数据的布尔值 (eg:签到业务)
+    // BitMap实现 统计一组数据的布尔值 (eg:签到业务)
     @Test
     public void testBitMap() {
         String redisKey = "test:bm:01";
 
-        // 记录
+        // 记录  索引从0开始
         redisTemplate.opsForValue().setBit(redisKey, 1, true);
         redisTemplate.opsForValue().setBit(redisKey, 4, true);
         redisTemplate.opsForValue().setBit(redisKey, 7, true);
@@ -201,7 +202,7 @@ public class RedisTests {
         System.out.println(obj);
     }
 
-    // 统计3组数据的布尔值, 并对这3组数据做OR运算.
+    // BitMap实现 统计3组数据的布尔值, 并对这3组数据做OR运算.
     @Test
     public void testBitMapOperation() {
         String redisKey2 = "test:bm:02";

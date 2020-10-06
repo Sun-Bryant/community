@@ -29,18 +29,23 @@ public class LikeService {
                 String entityLikeKey = RedisKeyUtil.getEntityLikeKey(entityType, entityId);
                 String userLikeKey = RedisKeyUtil.getUserLikeKey(entityUserId);
 
-                //这个是一个查询操作，查询操作必须放在事务的操作之外，
-                //因为redis的事务比较特殊，事务当中的所有命令都没有立即执行，而是把这些命令放在了队列里面，当提交事务的时候，统一提交。
+                // 这个是一个查询操作，查询操作必须放在事务的操作之外，
+                // 因为redis的事务比较特殊，事务当中的所有命令都没有立即执行，而是把这些命令放在了队列里面，当提交事务的时候，统一提交。
+                // 检查给定的元素是否在变量中。   查看userId,是否在该实体的点赞集合中。
                 boolean isMember = operations.opsForSet().isMember(entityLikeKey, userId);
 
                 //开启事务
                 operations.multi();
 
-                if (isMember) {
+                if (isMember) { // 取消点赞
+                    // 从该实体的点赞集合中移除当前用户
                     operations.opsForSet().remove(entityLikeKey, userId);
+                    // 从该实体的所属作者的总赞数减一。
                     operations.opsForValue().decrement(userLikeKey);
-                } else {
+                } else {  // 点赞
+                    // 从该实体的点赞集合中添加当前用户
                     operations.opsForSet().add(entityLikeKey, userId);
+                    // 从该实体的所属作者的总赞数加一。
                     operations.opsForValue().increment(userLikeKey);
                 }
 

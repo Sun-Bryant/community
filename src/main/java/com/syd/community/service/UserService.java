@@ -78,7 +78,7 @@ public class UserService implements CommunityConstant {
         loginTicket.setStatus(0);
         loginTicket.setExpired(new Date(System.currentTimeMillis() + 1000 * expiredSeconds));
 //        loginTicketMapper.insertLoginTicket(loginTicket);
-
+        // 存入缓存  登录凭证不删除
         String redisKey = RedisKeyUtil.getTicketKey(loginTicket.getTicket());
         redisTemplate.opsForValue().set(redisKey, loginTicket);
 
@@ -157,7 +157,7 @@ public class UserService implements CommunityConstant {
             return ACTIVATION_REPEAT;
         } else if (user.getActivationCode().equals(code)) {
             userMapper.updateStatus(userId, 1);
-            clearCache(userId);
+            clearCache(userId);  // 清除缓存
             return ACTIVATION_SUCCESS;
         } else {
             return ACTIVATION_FAILURE;
@@ -166,9 +166,9 @@ public class UserService implements CommunityConstant {
 
     public User findUserById(int id) {
 //        return userMapper.selectById(id);
-        User user = getCache(id);
-        if (user == null) {
-            user = initCache(id);
+        User user = getCache(id); // 从缓存中取值
+        if (user == null) {  // 缓存中没有
+            user = initCache(id);  // 查到user并且缓存
         }
         return user;
     }
@@ -197,7 +197,6 @@ public class UserService implements CommunityConstant {
         // 重置密码
         password = CommunityUtil.md5(password + user.getSalt());
         userMapper.updatePassword(user.getId(), password);
-
         map.put("user", user);
         return map;
     }
@@ -210,7 +209,9 @@ public class UserService implements CommunityConstant {
 
     public int updateHeader(int userId, String headUrl) {
 //        return userMapper.updateHeader(userId, headUrl);
+        // 调用mapper更新头像路径
         int rows = userMapper.updateHeader(userId, headUrl);
+        // 清除缓存
         clearCache(userId);
         return rows;
     }
