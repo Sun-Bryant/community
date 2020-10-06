@@ -38,7 +38,7 @@ public class SensitiveTests {
         text  =  sensitiveFilter.filter(text);
         System.out.println(text);
 
-        text = "☆f☆a☆b☆c☆";
+        text = "☆f☆a☆b☆c☆f☆a☆b☆c☆";
         text  =  sensitiveFilter.filter(text);
         System.out.println(text);
 

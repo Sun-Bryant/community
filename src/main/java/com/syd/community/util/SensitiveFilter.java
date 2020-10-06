@@ -74,11 +74,10 @@ public class SensitiveFilter {
      * @param text 待过滤的文本
      * @return 过滤后的文本
      */
-    public String filter(String text) {
-        if (StringUtils.isBlank(text)) {
+    public String filter(String text){
+        if(StringUtils.isBlank(text)){
             return null;
         }
-
         // 指针1
         TrieNode tempNode = rootNode;
         // 指针2
@@ -92,54 +91,51 @@ public class SensitiveFilter {
         // eg:  敏感词有fabcd和abc。要核验的字符串的最后一段为 fabc。
         // 此时指针二指f, 指针三指到c, 根据循环中的判断c的lastKeyword为false, position++, 此时跳出循环,
         // 然后将fabc加到StringBuilder中, 但是abc这个敏感词没有被过滤掉.
-        while (begin < text.length()) {
-            char c = text.charAt(position);
+        while(begin < text.length()){
+            if(position < text.length()) {
+                Character c = text.charAt(position);
 
-            // 跳过符号
-            if (isSymbol(c)) {
-                // 若指针1处于根节点,将此符号计入结果,让指针2向下走一步
-                if (tempNode == rootNode) {
-                    sb.append(c);
-                    begin++;
-                }
-                //如果最后一位仍然是符号，那就比较下一个，不能直接加，否则会越界
-                if(position==text.length()-1){
-                    begin++;
-                    position=begin;
+                // 跳过符号
+                if (isSymbol(c)) {
+                    if (tempNode == rootNode) {
+                        begin++;
+                        sb.append(c);
+                    }
+                    position++;
                     continue;
                 }
-                // 无论符号在开头或中间,指针3都向下走一步
-                position++;
-                continue;
-            }
 
-            // 检查下级节点
-            tempNode = tempNode.getSubNode(c);
-            if (tempNode == null) {
-                // 以begin开头的字符串不是敏感词
-                sb.append(text.charAt(begin));
-                // 进入下一个位置
-                position = ++begin;
-                // 重新指向根节点
-                tempNode = rootNode;
-            } else if (tempNode.isKeywordEnd()) {
-                // 发现敏感词,将begin~position字符串替换掉
-                sb.append(REPLACEMENT);
-                // 进入下一个位置
-                begin = ++position;
-                // 重新指向根节点
-                tempNode = rootNode;
-            } else {
-                // 检查下一个字符 先确保索引不越界
-                if (position < text.length() - 1) {
+                // 检查下级节点
+                tempNode = tempNode.getSubNode(c);
+                if (tempNode == null) {
+                    // 以begin开头的字符串不是敏感词
+                    sb.append(text.charAt(begin));
+                    // 进入下一个位置
+                    position = ++begin;
+                    // 重新指向根节点
+                    tempNode = rootNode;
+                }
+                // 发现敏感词
+                else if (tempNode.isKeywordEnd()) {
+                    // 发现敏感词,将begin~position字符串替换掉
+                    sb.append(REPLACEMENT);
+                    // 进入下一个位置
+                    begin = ++position;
+//                    // 重新指向根节点（可以加也可以不加），大佬没有加，我就不加了
+//                    tempNode = rootNode;
+                }
+                // 检查下一个字符
+                else {
                     position++;
                 }
             }
+            // position遍历越界仍未匹配到敏感词
+            else{
+                sb.append(text.charAt(begin));
+                position = ++begin;
+                tempNode = rootNode;
+            }
         }
-
-//        // 将最后一批字符计入结果
-//        sb.append(text.substring(begin));
-
         return sb.toString();
     }
 
