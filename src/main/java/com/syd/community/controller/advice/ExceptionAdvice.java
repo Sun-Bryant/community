@@ -25,7 +25,7 @@ public class ExceptionAdvice {
             logger.error(element.toString());
         }
         String xRequestedWith = request.getHeader("x-requested-with");
-        if ("XMLHttpRequest".equals(xRequestedWith)) {  // 说明这是一个html请求。
+        if ("XMLHttpRequest".equals(xRequestedWith)) {  // 说明这是一个异步请求。
             response.setContentType("application/plain;charset=utf-8");
             PrintWriter writer = response.getWriter();
             writer.write(CommunityUtil.getJSONString(1, "服务器异常！"));
